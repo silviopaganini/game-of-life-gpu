@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/silviopaganini/game-of-life-gpu",
   "keywords": [
-    "library",
-    "starter",
+    "webgl",
+    "gameoflife",
     "es6"
   ],
   "devDependencies": {
