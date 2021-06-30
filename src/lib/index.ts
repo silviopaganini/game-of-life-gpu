@@ -1,32 +1,32 @@
-import createFBO from "gl-fbo";
-import createShader from "gl-shader";
-import ndarray from "ndarray";
-import fill from "ndarray-fill";
-import fillScreen from "a-big-triangle";
+import createFBO from 'gl-fbo'
+import createShader from 'gl-shader'
+import ndarray from 'ndarray'
+import fill from 'ndarray-fill'
+import fillScreen from 'a-big-triangle'
 
 export default class GameOfLifeGL {
-  private gl: WebGLRenderingContext | null = null;
-  private bufferSize: number;
-  private updateShader: any;
-  private state: any[] = [];
-  private current = 0;
-  private pixels: Uint8Array | null = null;
-  private initialProbability: number;
+  private gl: WebGLRenderingContext | null = null
+  private bufferSize: number
+  private updateShader: any
+  private state: any[] = []
+  private current = 0
+  private pixels: Uint8Array | null = null
+  private initialProbability: number
 
   constructor({ bufferSize = 1024, initialProbability = 0.7 }) {
-    this.initialProbability = initialProbability;
-    const canvas = document.createElement("canvas");
-    this.gl = (canvas.getContext("webgl") ||
-      canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
-    this.bufferSize = bufferSize;
+    this.initialProbability = initialProbability
+    const canvas = document.createElement('canvas')
+    this.gl = (canvas.getContext('webgl') ||
+      canvas.getContext('experimental-webgl')) as WebGLRenderingContext
+    this.bufferSize = bufferSize
 
-    this.init();
+    this.init()
   }
 
   private init() {
-    if (!this.gl) return;
+    if (!this.gl) return
 
-    this.gl.disable(this.gl.DEPTH_TEST);
+    this.gl.disable(this.gl.DEPTH_TEST)
 
     this.updateShader = createShader(this.gl, {
       vertex: `
@@ -73,44 +73,45 @@ export default class GameOfLifeGL {
             }
           }
         `,
-    });
+    })
 
     this.state = [
       createFBO(this.gl, [this.bufferSize, this.bufferSize]),
       createFBO(this.gl, [this.bufferSize, this.bufferSize]),
-    ];
+    ]
 
     //Initialize this.state buffer
-    const initial_conditions = ndarray(
-      new Uint8Array(this.bufferSize * this.bufferSize * 4),
-      [this.bufferSize, this.bufferSize, 4]
-    );
+    const initial_conditions = ndarray(new Uint8Array(this.bufferSize * this.bufferSize * 4), [
+      this.bufferSize,
+      this.bufferSize,
+      4,
+    ])
 
     fill(initial_conditions, (_x: number, _y: number, c: number) => {
-      if (c === 0) return Math.random() >= this.initialProbability ? 255 : 0;
-      return 255;
-    });
+      if (c === 0) return Math.random() >= this.initialProbability ? 255 : 0
+      return 255
+    })
 
-    this.state[0]?.color[0]?.setPixels(initial_conditions);
+    this.state[0]?.color[0]?.setPixels(initial_conditions)
   }
 
   public update() {
-    if (!this.gl) return;
+    if (!this.gl) return
 
-    const prevState = this.state[this.current];
-    const curState = this.state[(this.current ^= 1)];
+    const prevState = this.state[this.current]
+    const curState = this.state[(this.current ^= 1)]
 
     //Switch to this.state fbo
-    curState.bind();
+    curState.bind()
 
     //Run update shader
-    this.updateShader.bind();
-    this.updateShader.uniforms.buffer = prevState.color[0].bind();
-    this.updateShader.uniforms.dims = prevState.shape;
+    this.updateShader.bind()
+    this.updateShader.uniforms.buffer = prevState.color[0].bind()
+    this.updateShader.uniforms.dims = prevState.shape
 
-    fillScreen(this.gl);
+    fillScreen(this.gl)
 
-    this.pixels = new Uint8Array(this.bufferSize * this.bufferSize * 4);
+    this.pixels = new Uint8Array(this.bufferSize * this.bufferSize * 4)
     this.gl.readPixels(
       0,
       0,
@@ -119,10 +120,8 @@ export default class GameOfLifeGL {
       this.gl.RGBA,
       this.gl.UNSIGNED_BYTE,
       this.pixels
-    );
+    )
 
-    return this.pixels
-      .filter((_a, i) => i === 0 || i % 4 === 0)
-      .map((a) => (a === 255 ? 1 : 0));
+    return this.pixels.filter((_a, i) => i === 0 || i % 4 === 0).map(a => (a === 255 ? 1 : 0))
   }
 }

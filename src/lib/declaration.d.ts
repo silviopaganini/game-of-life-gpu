@@ -1,1 +1,1 @@
-declare module "ndarray-fill";
+declare module 'ndarray-fill'

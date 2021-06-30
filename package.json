@@ -9,6 +9,7 @@
     "build": "webpack && tsc",
     "build:demo": "webpack --config webpack.config.demo.js",
     "test": "jest --silent",
+    "lint": "prettier --write ./src/**/**",
     "coverage": "npm run test -- --coverage",
     "prepare": "npm run build",
     "trypublish": "npm publish || true"
