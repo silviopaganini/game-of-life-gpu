@@ -1,5 +1,9 @@
-import MyLibrary from '../index';
+/**
+ * @jest-environment jsdom
+ */
 
-it('Runs without crashing', () => {
-  new MyLibrary();
+import GameOfLifeGL from "../index";
+
+it("Runs without crashing", () => {
+  new GameOfLifeGL({});
 });
