@@ -1,18 +1,18 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require("path");
+const webpack = require("webpack");
 const PrettierPlugin = require("prettier-webpack-plugin");
-const TerserPlugin = require('terser-webpack-plugin');
-const getPackageJson = require('./scripts/getPackageJson');
+const TerserPlugin = require("terser-webpack-plugin");
+const getPackageJson = require("./scripts/getPackageJson");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
-const {
-  version,
-  name,
-  license,
-  repository,
-  author,
-} = getPackageJson('version', 'name', 'license', 'repository', 'author');
+const { version, name, license, repository, author } = getPackageJson(
+  "version",
+  "name",
+  "license",
+  "repository",
+  "author"
+);
 
 const banner = `
   ${name} v${version}
@@ -26,14 +26,14 @@ const banner = `
 
 module.exports = {
   mode: "production",
-  devtool: 'source-map',
-  entry: './src/lib/index.ts',
+  devtool: "source-map",
+  entry: "./src/lib/index.ts",
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'build'),
-    library: "MyLibrary",
-    libraryTarget: 'umd',
-    clean: true
+    filename: "index.js",
+    path: path.resolve(__dirname, "build"),
+    library: "GameOfLifeGL",
+    libraryTarget: "umd",
+    clean: true,
   },
   optimization: {
     minimize: true,
@@ -42,18 +42,18 @@ module.exports = {
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: {
           map: {
-            inline: false
-          }
-        }
-      })
+            inline: false,
+          },
+        },
+      }),
     ],
   },
   devServer: {
     open: true,
     hot: true,
     host: "localhost",
-    static: path.join(__dirname, 'demo'),
-    port: 9000
+    static: path.join(__dirname, "demo"),
+    port: 9000,
   },
   module: {
     rules: [
@@ -61,8 +61,8 @@ module.exports = {
         test: /\.(m|j|t)s$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader'
-        }
+          loader: "babel-loader",
+        },
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -73,18 +73,18 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
-        use: ['url-loader'],
-      }
-    ]
+        use: ["url-loader"],
+      },
+    ],
   },
   plugins: [
     new PrettierPlugin(),
     new MiniCssExtractPlugin({
-        filename: 'css/index.css'
+      filename: "css/index.css",
     }),
-    new webpack.BannerPlugin(banner)
+    new webpack.BannerPlugin(banner),
   ],
   resolve: {
-    extensions: ['.ts', '.js', '.json']
-  }
+    extensions: [".ts", ".js", ".json"],
+  },
 };
