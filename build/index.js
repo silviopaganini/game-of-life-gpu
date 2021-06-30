@@ -1,6 +1,6 @@
 /*!
  * 
- *   gof-gpu v1.0.0
+ *   gof-gpu v2.0.0
  *   https://github.com/silviopaganini/game-of-life-gpu
  *
  *   Copyright (c) Silvio Paganini (https://github.com/silviopaganini) and project contributors.
