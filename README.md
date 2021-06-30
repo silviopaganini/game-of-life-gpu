@@ -1,66 +1,43 @@
- <div align="center">
- <img align="center" width="230" src="https://i.imgur.com/iHgtvmg.png" />
-  <h2>Typescript Library Boilerplate Basic</h2>
-  <blockquote>Minimal Library Starter Kit for your Typescript projects</blockquote>
+  # Game of Life GPU
+  Minimal library using WebGL GPGPU processing
  
- <a href="https://github.com/hodgef/ts-library-boilerplate-basic/actions"><img alt="Build Status" src="https://github.com/hodgef/ts-library-boilerplate-basic/workflows/Build/badge.svg?color=green" /></a> <a href="https://github.com/hodgef/ts-library-boilerplate-basic/actions"> <img alt="Publish Status" src="https://github.com/hodgef/ts-library-boilerplate-basic/workflows/Publish/badge.svg?color=green" /></a> <img src="https://img.shields.io/david/hodgef/ts-library-boilerplate-basic.svg" /> <a href="https://david-dm.org/hodgef/ts-library-boilerplate-basic?type=dev"><img src="https://img.shields.io/david/dev/hodgef/ts-library-boilerplate-basic.svg" /></a> <img src="https://api.dependabot.com/badges/status?host=github&repo=hodgef/ts-library-boilerplate-basic" />
- 
-<strong>For a plain Javascript alternative, check out [js-library-boilerplate-basic](https://github.com/hodgef/js-library-boilerplate-basic).</strong>
+## Usage
 
-</div>
+```ts
 
-## ⭐️ Features
+const cells = []
+let line = -1
 
-- Webpack 5
-- Babel 7
-- Hot reloading (`npm start`)
-- Automatic Types file generation (index.d.ts)
-- UMD exports, so your library works everywhere.
-- Jest unit testing
-- Daily [dependabot](https://dependabot.com) dependency updates
+const GameOfLifeGLInstance = new GameOfLifeGL({
+    bufferSize: GRID_SIZE // size of your grid,
+    initialProbability: 0.5 // probability for cells to be initially filled,
+});
 
-## 📦 Getting Started
+for (let i = 0; i < GRID_SIZE; i++) {
+    const cell = document.createElement("div");
+    main.appendChild(cell);
 
-```
-git clone https://github.com/hodgef/ts-library-boilerplate-basic.git myLibrary
-npm install
-```
+    if (i % GRID_ROW === 0) {
+        line++;
+    }
 
-## 💎 Customization
+    cell.style.left = `${(i % GRID_ROW) * SIZE}px`;
+    cell.style.top = `${line * SIZE}px`;
+    cell.style.width = `${SIZE}px`;
+    cell.style.height = `${SIZE}px`;
 
-> Before shipping, make sure to:
+    cells.push(cell);
+}
 
-1. Edit `LICENSE` file
-2. Edit `package.json` information (These will be used to generate the headers for your built files)
-3. Edit `library: "MyLibrary"` with your library's export name in `./webpack.config.js`
+const update = () => {
+    // returns array of [1, 0] 
+    const grid = GameOfLifeGLInstance.update()
+    cells.forEach((cell, index) => {
+        cell.style.background = !!grid[index] ? "red" : "white";
+    });
+}
 
-## 🚀 Deployment
-
-1. `npm publish`
-2. Your users can include your library as usual
-
-### npm
-
-```
-import MyLibrary from 'my-library';
-const libraryInstance = new MyLibrary();
-...
+update()
 ```
 
-### self-host/cdn
-
-```
-<script src="build/index.js"></script>
-
-const MyLibrary = window.MyLibrary.default;
-const libraryInstance = new MyLibrary();
-...
-```
-
-## ✅ Libraries built with this boilerplate
-
-> Made a library using this starter kit? Share it here by [submitting a pull request](https://github.com/hodgef/ts-library-boilerplate-basic/pulls)!
-
-- [simple-keyboard](https://github.com/hodgef/simple-keyboard) - Javascript Virtual Keyboard
-- [react-simple-keyboard](https://github.com/hodgef/react-simple-keyboard) - React Virtual Keyboard
-- [simple-keyboard-layouts](https://github.com/hodgef/simple-keyboard-layouts) - Keyboard layouts for simple-keyboard
+See demo [src/demo/index.ts](https://github.com/silviopaganini/game-of-life-gpu/blob/master/src/demo/index.ts)
